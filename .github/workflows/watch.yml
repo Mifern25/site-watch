@@ -1,0 +1,19 @@
+name: site-watch
+on:
+  schedule: [{cron: '*/5 * * * *'}]
+  workflow_dispatch:
+    inputs:
+      test: {description: 'Also send a test message', type: boolean, default: false}
+permissions: {contents: write}
+concurrency: {group: watch}
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: bash watch.sh
+        env:
+          TG_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TG_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+          TEST: ${{ inputs.test }}
