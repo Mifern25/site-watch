@@ -4,8 +4,8 @@
 set -u
 SITES=${SITES:-"smartearningguide.online segjobs.in"}
 now=$(date +%s); hm() { TZ=Asia/Kolkata date -d "@$1" '+%d %b %H:%M IST'; }
-send() { [ -n "${TG_TOKEN:-}" ] && curl -s -m 20 -o /dev/null "https://api.telegram.org/bot$TG_TOKEN/sendMessage" \
-  --data-urlencode "chat_id=$TG_CHAT" --data-urlencode "text=$1"; }
+send() { [ -n "${TG_TOKEN:-}" ] && { curl -sf -m 20 -o /dev/null "https://api.telegram.org/bot$TG_TOKEN/sendMessage" \
+  --data-urlencode "chat_id=$TG_CHAT" --data-urlencode "text=$1" && echo "telegram sent" || echo "TELEGRAM FAILED"; }; }
 up() {  # 3 tries, 20 s apart: one slow answer is not an outage
   for i in 1 2 3; do
     c=$(curl -s -o /dev/null -m 20 -w '%{http_code}' "https://$1/")
